@@ -72,22 +72,26 @@ endian = 'little'
 EOF
 
 echo "Generating build files (OpenGL Core only) ..." $'\n'
-meson build-android-glcore \
+meson setup build-android-glcore \
   --cross-file $workdir/mesa-main/android-aarch64 \
   -Dbuildtype=release \
   -Dplatforms=android \
   -Dplatform-sdk-version=31 \
   -Dandroid-stub=true \
   -Dgallium-drivers=freedreno \
+  -Dfreedreno-kmds=kgsl \
   -Dvulkan-drivers= \
-  -Dfreedreno-kmds= \
   -Dglx=disabled \
   -Degl=enabled \
   -Dgles1=disabled \
   -Dgles2=disabled \
   -Dopengl=true \
   -Dshared-glapi=enabled \
-  -Db_lto=true
+  -Db_lto=true \
+  -Ddri-drivers= \
+  -Dgbm=disabled \
+  -Dkms=disabled \
+  -Dlibdrm=disabled
 
 echo "Compiling Mesa (OpenGL Core) ..." $'\n'
 ninja -C build-android-glcore
