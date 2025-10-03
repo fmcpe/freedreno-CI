@@ -16,37 +16,40 @@ outputdir="$workdir/output"
 clear
 
 echo "Checking system for required Dependencies ..."
-for deps_chk in $deps; do 
-	sleep 0.25
-	if command -v $deps_chk >/dev/null 2>&1 ; then
-		echo -e "$green - $deps_chk found $nocolor"
-	else
-		echo -e "$red - $deps_chk not found, can't continue. $nocolor"
-		deps_missing=1
-	fi
+for deps_chk in $deps; do
+  sleep 0.25
+  if command -v $deps_chk >/dev/null 2>&1 ; then
+    echo -e "$green - $deps_chk found $nocolor"
+  else
+    echo -e "$red - $deps_chk not found, can't continue. $nocolor"
+    deps_missing=1
+  fi
 done
-	
+
 if [ "$deps_missing" == "1" ]; then
-	echo "Please install missing dependencies" && exit 1
+  echo "Please install missing dependencies" && exit 1
 fi
 
+echo "Upgrading Meson to latest version via pip..." $'\n'
+pip install --upgrade meson
+
 echo "Installing python Mako dependency (if missing) ..." $'\n'
-pip install mako &> /dev/null
+pip install mako
 
 echo "Creating and entering work directory ..." $'\n'
 mkdir -p "$workdir" && cd "$workdir"
 
 echo "Downloading Android NDK (~500MB) ..." $'\n'
-curl -L "https://dl.google.com/android/repository/$ndkver-linux.zip" --output "$ndkver"-linux.zip &> /dev/null
+curl -L "https://dl.google.com/android/repository/$ndkver-linux.zip" --output "$ndkver"-linux.zip
 
 echo "Extracting Android NDK ..." $'\n'
-unzip "$ndkver"-linux.zip &> /dev/null
+unzip "$ndkver"-linux.zip
 
 echo "Downloading Mesa source (~30MB) ..." $'\n'
-curl -L "https://gitlab.freedesktop.org/mesa/mesa/-/archive/main/mesa-main.zip" --output mesa-main.zip &> /dev/null
+curl -L "https://gitlab.freedesktop.org/mesa/mesa/-/archive/main/mesa-main.zip" --output mesa-main.zip
 
 echo "Extracting Mesa source ..." $'\n'
-unzip mesa-main.zip &> /dev/null
+unzip mesa-main.zip
 cd mesa-main
 
 echo "Creating Meson cross file ..." $'\n'
@@ -84,11 +87,10 @@ meson build-android-glcore \
   -Dgles2=disabled \
   -Dopengl=true \
   -Dshared-glapi=true \
-  -Db_lto=true \
-  &> $workdir/meson_log
+  -Db_lto=true
 
 echo "Compiling Mesa (OpenGL Core) ..." $'\n'
-ninja -C build-android-glcore &> $workdir/ninja_log
+ninja -C build-android-glcore
 
 # ✅ Export all build output
 echo "Exporting all build output to $outputdir ..." $'\n'
