@@ -86,7 +86,7 @@ meson build-android-glcore \
   -Dgles1=disabled \
   -Dgles2=disabled \
   -Dopengl=true \
-  -Dshared-glapi=true \
+  -Dshared-glapi=enabled \
   -Db_lto=true
 
 echo "Compiling Mesa (OpenGL Core) ..." $'\n'
