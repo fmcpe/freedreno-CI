@@ -75,7 +75,7 @@ echo "Generating build files (OpenGL Core only) ..." $'\n'
 meson build-android-glcore \
   --cross-file $workdir/mesa-main/android-aarch64 \
   -Dbuildtype=release \
-  -Dplatforms=surfaceless \
+  -Dplatforms=android \
   -Dplatform-sdk-version=31 \
   -Dandroid-stub=true \
   -Dgallium-drivers=freedreno \
